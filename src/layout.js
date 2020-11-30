@@ -10,16 +10,18 @@ import Schedules from "./schedules";
 import Map from "./map";
 import Tree from "./tree";
 import Booknow from "./Booknow";
-import Analytics from "./analytics";
+// import Analytics from "./analytics";
+import Empanalytics from "./Empanalytics";
+import Empanalyticsbackup from "./Empanalyticsbackup";
 
 const LayoutOne = ({Children}) => 
    <div>
         <h2 style={{marginLeft:'30%'}}> Employee Profile</h2>
         {Children}
         <Chart />
-        <div style={{float:'right', marginRight:'50px'}}>
+        <div style={{float:'right'}}>
             
-        <h3> Organization Hierarchy Chart </h3>
+        <h5> Organization Chart </h5>
         <br/>
          <Tree />
          </div>
@@ -113,17 +115,18 @@ const LayoutFour = ({Children}) =>
 
 const LayoutFive = ({Children}) =>
 <div>
-    <h2> Analytics</h2>
+    <h2 style={{textAlign:'center'}}> Analytics</h2>
     {Children}
-    <Analytics />
+    <Empanalytics />
+    {/* <Analytics /> */}
 </div>
 
 const LayoutSix = ({Children}) =>
 <div>
-    <h2> Map</h2>
+    <h2 style={{textAlign:'center'}}> Map</h2>
     {Children}
     < Map />
-     
+     {/* <Empanalyticsbackup /> */}
     </div>
     
     

@@ -87,18 +87,22 @@ export default function CustomizedTreeView() {
       defaultEndIcon={<CloseSquare />}
     >
       <StyledTreeItem nodeId="1" label="Top Management">
-        <StyledTreeItem nodeId="2" label="Section Head" />
-        <StyledTreeItem nodeId="3" label="Dept. Head">
-          <StyledTreeItem nodeId="6" label="Section Head" />
-          <StyledTreeItem nodeId="7" label="Dept. Head">
-            <StyledTreeItem nodeId="9" label="Engineers" />
-            <StyledTreeItem nodeId="10" label="Draughts Men" />
-            <StyledTreeItem nodeId="11" label="Software Engineer" />
+        
+        <StyledTreeItem nodeId="2" label="Executives">
+          <StyledTreeItem nodeId="5" label="Section Head" />
+          <StyledTreeItem nodeId="6" label="Dept. Head">
+            <StyledTreeItem nodeId="8" label="Engineers" />
+            <StyledTreeItem nodeId="9" label="Draughts Men" />
+            <StyledTreeItem nodeId="10" label="Software Engineer" />
           </StyledTreeItem>
-          <StyledTreeItem nodeId="8" label="Sections" />
+          <StyledTreeItem nodeId="7" label="Sections" />
         </StyledTreeItem>
-        <StyledTreeItem nodeId="4" label="Executives" />
-        <StyledTreeItem nodeId="5" label="CIO" />
+        <StyledTreeItem nodeId="3" label="DepartmentHead" />
+        <StyledTreeItem nodeId="4" label="CIO" >
+          <StyledTreeItem nodeId="11" label="Software Engineers" />
+          <StyledTreeItem nodeId="12" label="Software Engineers" />
+          <StyledTreeItem nodeId="13" label="Software Engineers" />
+       </StyledTreeItem> 
       </StyledTreeItem>
     </TreeView>
   );

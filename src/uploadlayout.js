@@ -29,7 +29,8 @@ class Imageupload extends React.Component{
         return( 
             <div>
                 <input type="file" onChange={this.handleChange} />
-                <img src={this.state.file} withIcon={true}
+                <br/>
+                <img src={this.state.file} withIcon={true} style={{marginLeft:'20%'}}
             />
 
             {/* <ImageUploader

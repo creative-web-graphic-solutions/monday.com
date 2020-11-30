@@ -7,14 +7,14 @@ import bala from "./bala.jpg";
 
 import data from "./data.json";
 
-let Test = "Bala";
-let designation = "CEO";
+let Test = "Balamurugan ";
+let designation = "Sofware Engineer";
 
 // Create a state
 
 
 
-const Card = (props) => {
+const OrgCard = (props) => {
   const levelColor = randomcolor();
   const [filterInput, setFilterInput] = useState("");
   const [task, setTask] = useState("");
@@ -30,7 +30,7 @@ const handleName = e => {
       {props.data.map((item) => (
         <Fragment key={item.name}>
           <li>
-            <div className="card">
+            <div className="orgcard">
               <div className="image">
                 <img
                   src={bala}
@@ -38,11 +38,12 @@ const handleName = e => {
                   style={{ borderColor: levelColor }}
                 />
               </div>
-              <div className="card-body">
-                <h4>{<input value={filterInput} onChange={handleName} ref={textInput} />}</h4>
+              <div className="orgcard-body">
+                {/* <h4>{<input value={filterInput} onChange={handleName} ref={textInput} />}</h4> */}
+                <h5>{Test}</h5>
                 <p>{designation}</p>
               </div>
-              <div className="card-footer" style={{ background: levelColor }}>
+              <div className="orgcard-footer" style={{ background: levelColor }}>
                 <img
                   src="https://www.flaticon.com/svg/static/icons/svg/2950/2950657.svg"
                   alt="Chat"
@@ -57,11 +58,12 @@ const handleName = e => {
                 />
               </div>
               <div>
-              <button class="collapsible"></button>
+              {/* <button class="collapsible"></button> */}
               </div>
             </div>
-            {item.children?.length && <Card data={item.children} />}
+            {item.children?.length && <OrgCard data={item.children} />}
           </li>
+          
         </Fragment>
       ))}
     </ul>
@@ -71,7 +73,7 @@ const handleName = e => {
 const Chart = () => {
   return (
     <div className="org-tree">
-      <Card data={data} />
+      <OrgCard data={data} />
     </div>
   );
 };

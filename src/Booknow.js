@@ -4,6 +4,9 @@ import Image from 'react-bootstrap/Image';
 import { Checkbox } from 'react-input-checkbox';
 import { TextInput } from 'react-native';
 import {db} from './config';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Row } from 'react-bootstrap';
+import Firebase from 'firebase';
 // const Checkbox = ({props}) => (
 //     <Checkbox disabled={props.disabled} value={props.value} onChange={props.onChange} >
 // )
@@ -16,54 +19,76 @@ class Booknow extends React.Component{
     constructor(props){
         super(props);
         this.state = {            
-            Name:'',
-            Startdate:'',
-            Enddate:'',
-            Department:'',
-            Deskno:'',
-            Inhousehour:'',
-            Onlinehour:'',
-            allpeople:'',
-            seatno:''
+            booking:[],
+            // checkbox : 'yes'
+            status: false,
+            
         }
         this.show = this.show.bind(this);
     }
 
-    componentDidMount() {
-        db.ref('Booking/NewBooking').on('value', querySnapShot => {
-           let data = querySnapShot.val() ? querySnapShot.val() : {};         
-           let allpeoples = {...data};
-           this.setState({
-             allpeople: allpeoples,
+    // componentDidMount() {
+    //     db.ref('Booking/NewBooking').on('value', querySnapShot => {
+    //        let data = querySnapShot.val() ? querySnapShot.val() : {};         
+    //        let allpeoples = {...data};
+    //        this.setState({
+    //          allpeople: allpeoples,
   
-           });     
-        });
-     }
+    //        });     
+    //     });
+    //  }
 
-     addNewbooking() {
-        let newpeople = db.ref('Booking/NewBooking').push({
-           Name: this.state.Name,
-           Startdate: this.state.Startdate,
-           Enddate: this.state.Enddate,
-           Department: this.state.Department,
-           Deskno: this.state.Deskno,
-           Inhousehour: this.state.Inhousehour,
-           Onlinehour:this.state.Onlinehour
-         });
+    //  addNewbooking() {
+    //     let newpeople = db.ref('Booking/NewBooking').push({
+    //        Name: this.state.Name,
+    //        Startdate: this.state.Startdate,
+    //        Enddate: this.state.Enddate,
+    //        Department: this.state.Department,
+    //        Deskno: this.state.Deskno,
+    //        Inhousehour: this.state.Inhousehour,
+    //        Onlinehour:this.state.Onlinehour
+    //      });
          
-        //  Alert('Action!', 'A new item was created');
-         this.setState({
-           Name: '',
-           Startdate:'',
-           Enddate:'',
-           Department:'',
-           DeskNo:'',
-           Inhousehour:'',
-           Onlinehour:''
+    //     //  Alert('Action!', 'A new item was created');
+    //      this.setState({
+    //        Name: '',
+    //        Startdate:'',
+    //        Enddate:'',
+    //        Department:'',
+    //        DeskNo:'',
+    //        Inhousehour:'',
+    //        Onlinehour:''
   
-         });
+    //      });
          
-     }
+    //  }
+
+    componentDidMount() {
+      this.getUserData();
+    }
+    
+    componentDidUpdate(prevProps, prevState) {
+      // check on previous state
+      // only write when it's different with the new state
+      if (prevState !== this.state) {
+        this.writeUserData();
+      }
+    }
+  
+    writeUserData = () => {
+      Firebase.database().ref('Booking/NewBooking').set(this.state);
+      console.log('DATA SAVED');
+    }
+    
+    getUserData = () => {
+      let ref = Firebase.database().ref('Booking/NewBooking');
+      ref.on('value', snapshot => {
+        const state = snapshot.val();
+        this.setState(state);
+      });
+      console.log('DATA RETRIEVED');
+    }
+  
 
     onClick = (e) =>{
         e.preventDefault()
@@ -76,103 +101,64 @@ class Booknow extends React.Component{
             'The seat Number is:'+ this.seatno
         )
     }
-    checkChange(){
-        return{
-
-        }
+    changeStatus = (event) => {
+       this.setState((prevState) => {
+         return {
+           ...prevState,
+           status:!prevState.status
+         }
+       })
     }
 
 render(){
+    
+    
     return(
-        <div>
-           <div style={{float:'right', marginRight:'30%'}}>
+        <div >
+           <div style={{float:'right', marginRight:'20%', marginTop:'5%'}}>       
+        <h3>My Booking Details</h3> 
         
-        
-        {/* this.show(seatno); */}
-        <form>      
-      <h1> My Booking Details</h1> <br />
-      {/* <h3>Name: {this.state.username} </h3> */}
-      <br/>
-
-      <p>Name:
-      <TextInput           
-          style={{backgroundColor:'white', marginLeft:'120px', width:'200px'}}
-          value={this.state.Name}
-          type="text"          
-          onChangeText={e => {
-            this.setState({
-              Name: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewbooking}
-        /> </p>
-      <br />
-      <p>Start Block Date:
-      <TextInput           
-          style={{backgroundColor:'white', marginLeft:'40px', width:'200px'}}
-          type={'datetime'}
-          options ={{
-            format:'DD-MM-YYYY'
-          }}
-          value={this.state.Startdate}                
-          onChangeText={e => {
-            this.setState({
-              Startdate: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewbooking}
-        />  </p>
-      <br />
-      <p>End Block Date: 
-      <TextInput           
-          style={{backgroundColor:'white', marginLeft:'40px', width:'200px'}}
-          type={'datetime'}
-          options ={{
-            format:'DD-MM-YYYY'
-          }}
-          value={this.state.Enddate}    
+      <form onSubmit={ this.handleSubmit } style={{background:'white', padding:'40px'}} >
+            <div className="form-group" >
+              <input type='hidden' ref='uid' />
+              <div  className="form-group">
+                <label for="firstname">FirstName:</label>
+                <input style={{marginLeft:'20px'}} type="text" ref='firstname'  placeholder="FirstName" />
+              </div>
+              <div className="form-group">
+                <label>LastName:</label>
+                <input style={{marginLeft:'20px'}} type="text" ref='lastname' placeholder="LastName" />
+              </div>
+              <div className="form-group">
+                <label>Start Date:</label>
+                <input style={{marginLeft:'20px'}} type="date" ref='startdate' placeholder="Start Date" />
+              </div>
+              <div className="form-group">
+                <label>End Date:</label>
+                <input style={{marginLeft:'22px'}} type="date" ref='enddate' placeholder="End Date" />
+              </div>
+              <div className="form-group ">
+                <label>DeskNo:</label>
+                <input style={{marginLeft:'25px'}} type="text" ref='deskno'  placeholder="DeskNo" />
+              </div>
+              <div className="form-group ">
+                <label>Division:</label>
+                <input  style={{marginLeft:'27px'}} type="text" ref='division' placeholder="Division" />
+              </div>
+              
+              <div className={"form-group"}>
                 
-          onChangeText={e => {
-            this.setState({
-              Enddate: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewbooking}
-        />  </p> <br/>
-      <p>Desk Number:
-      <TextInput           
-          style={{backgroundColor:'white', marginLeft:'60px', width:'200px'}}
-          value={this.state.Deskno} 
-          type="text"         
-          onChangeText={e => {
-            this.setState({
-              DeskNo: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewbooking}
-        /> </p> <br/>
-      <p>Department:
-      <TextInput           
-          style={{backgroundColor:'white', marginLeft:'60px', width:'200px'}}
-          value={this.state.Department}          
-          type="text"
-          onChangeText={e => {
-            this.setState({
-              Department: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewbooking}
-        /> </p> <br/>
-      <p> <Checkbox  onChange={this.checkChange} style={{padding:'10px'}} > onlinehour</Checkbox>
-       <Checkbox onChange={this.checkChange} > Inhousehour</Checkbox></p>
-      <p> <br/>
-      <button type='submit' onPress={this.addNewbooking} style={{background:'red', padding:'10px', marginLeft:'160px'}}>Block selected Dates</button>
-        
-     
-      </p>
-      </form>
+                <input type="checkbox" className="form-check-input" value={this.state.status} ref='onlinehour' onChange={this.changeStatus} />
+                <label style={{width:'200px'}}> Online Hours</label>
+                <input type="checkbox" style={{float:'right'}} value={!this.state.status} ref='inhousehour' onChange={this.changeStatus} className="form-check-input" />
+                <label> Inhouse Hours</label>
+              </div>
+            </div>
+            <button type="submit" style={{marginLeft:'120px'}} className="btn btn-primary">Save</button>
+          </form>
+
         </div>
-        <h1 style={{marginLeft:'10%'}}> BookNow</h1>
+        <h1 style={{marginLeft:'5%'}}> Block Selected Dates</h1>
         <img src={offlayout} usemap="#imagemap" style={{marginLeft:'4%'}} />
 
         <map name="imagemap" >
@@ -237,6 +223,54 @@ render(){
         </div>
     )
 }
+
+handleSubmit = (event) => {
+  event.preventDefault();
+  let firstname = this.refs.firstname.value;
+  let lastname = this.refs.lastname.value;
+  let deskno = this.refs.deskno.value;
+  let division = this.refs.division.value;
+  let startdate = this.refs.startdate.value;
+  let enddate = this.refs.enddate.value;
+  let onlinehour = this.refs.onlinehour.value;
+  let inhousehour = this.refs.inhousehour.value;
+  // let role = this.refs.role.value;
+  let uid = this.refs.uid.value;
+
+  if (uid && firstname && lastname){
+    const { booking } = this.state;
+    const devIndex = booking.findIndex(data => {
+      return data.uid === uid 
+    });
+    booking[devIndex].firstname = firstname;
+    booking[devIndex].lastname = lastname;
+    booking[devIndex].deskno = deskno;
+    booking[devIndex].division = division;
+    booking[devIndex].startdate = startdate;
+    booking[devIndex].enddate = enddate;
+    booking[devIndex].onlinehour = onlinehour;
+    booking[devIndex].inhousehour = inhousehour;
+    // schedules[devIndex].role = role;
+    this.setState({ booking });
+  }
+  else if (firstname && lastname ) {
+    const uid = new Date().getTime().toString();
+    const { booking } = this.state;
+    booking.push({ uid, firstname, lastname, deskno, division, startdate, enddate, onlinehour, inhousehour })
+    this.setState({ booking });
+  }
+
+  this.refs.firstname.value = '';
+  this.refs.lastname.value = '';
+  this.refs.deskno.value = '';
+  this.refs.division.value = '';
+  this.refs.startdate.value = '';
+  this.refs.enddate.value = '';
+  this.refs.onlinehour.value = '';
+  this.refs.inhousehour.value = '';
+  this.refs.uid.value = '';
+}
+
 }
 
 export default Booknow;

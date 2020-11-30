@@ -156,13 +156,13 @@ body {
   border-color: #94a0b4;
 }
 
-.card {
+.orgcard {
   position: relative;
   padding-top: 50px;
   /* width: 300px; */
 }
 
-.card .image {
+.orgcard .image {
   border-radius: 50%;
   width: 80px;
   height: 80px;
@@ -172,15 +172,15 @@ body {
   top: -10px;
   z-index: 100;
 }
-.card .image img {
+.orgcard .image img {
   border-radius: 50%;
   width: 80px;
   height: 80px;
   border: 13px solid #96f6b7;
 }
-.card .card-body {
+.orgcard .orgcard-body {
   background: #fff;
-  height: 56px;
+  height: 120px;
   text-align: center;
   width: 300px;
   padding-top: 60px;
@@ -193,15 +193,15 @@ body {
   transform: translateX(-50%);
 }
 
-.card .card-body h2 {
+.orgcard .orgcard-body h2 {
   font-weight: 600;
   line-height: 20px;
 }
-.card .card-body p {
+.orgcard .orgcard-body p {
   line-height: 20px;
   font-size: small;
 }
-.card .card-footer {
+.orgcard .orgcard-footer {
   padding: 3px;
   background: #96f6b7;
   text-align: center;
@@ -215,7 +215,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
-.card .card-footer img {
+.orgcard .orgcard-footer img {
   width: 25px;
   margin: 5px;
 }
@@ -283,24 +283,25 @@ nav > a {
   font-family: arial, sans-serif;
 }
 
-#students {
+#schedules {
   text-align: center;
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   border: 3px solid #ddd;
-  width: 100%;
+  /* width: 100%; */
 }
 
-#students td, #students th {
+#schedules td, #schedules th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 2px;
+  
 }
 
-#students tr:nth-child(even){background-color: #f2f2f2;}
+#schedules tr:nth-child(even){background-color: #f2f2f2;}
 
-#students tr:hover {background-color: #ddd;}
+#schedules tr:hover {background-color: #ddd;}
 
-#students th {
+#schedules th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: center;
@@ -327,7 +328,7 @@ nav > a {
 
 #Reservations td, #Reservations th {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 2px;
 }
 
 #Reservations tr:nth-child(even){background-color: #f2f2f2;}
@@ -335,8 +336,7 @@ nav > a {
 #Reservations tr:hover {background-color: #ddd;}
 
 #Reservations th {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding:2px;
   text-align: center;
   background-color: #4CAF50;
   color: white;

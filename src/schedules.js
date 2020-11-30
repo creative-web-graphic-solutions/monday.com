@@ -1,278 +1,217 @@
-import React, { Component } from 'react';
-import Firebase from "firebase";
-import "firebase/auth";
-import "firebase/firestore";
-import { StyleSheet, Alert, View, Text, Button, ScrollView, TextInput } from 'react-native';
-
- import {db} from './config';
-import { render } from 'react-dom';
+import React from 'react';
+import "./styles.css";
+import Firebase from 'firebase';
+import { db } from './config';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
- const styles = StyleSheet.create({
-  
-   TextItem: {
-      padding: '12px',
-      box:'10px',
-      textAlign: 'center',
-      backgroundColor: '#4CAF50',
-      color: 'white'
-  
-    }
- });
+class Schedules extends React.Component {
 
- class ScheduleItem extends React.Component {
-   constructor(props) {
-      super(props) //since we are extending class Table so we have to use super in order to override Component class constructor
-      this.state = { //state is by default an object
-        allpeople:'',
-         id:'',
-         Firstname:'',
-         Lastname:'',
-         Division:'',
-         DeskNo:'',
-         Email:'',
-         phone:'',
-         // presentpeople: ''         
-      };
+  constructor(props){
+    super(props);
+    // Firebase.initializeApp(db);
+
+    this.state = {
+      schedules: []
       
-   }
+    }
+  }
 
-   componentDidMount() {
-      db.ref('Reservation/Schedules').on('value', querySnapShot => {
-         let data = querySnapShot.val() ? querySnapShot.val() : {};         
-         let allpeoples = {...data};
-         this.setState({
-           allpeople: allpeoples,
+  componentDidMount() {
+    this.getUserData();
+  }
+  
+  componentDidUpdate(prevProps, prevState) {
+    // check on previous state
+    // only write when it's different with the new state
+    if (prevState !== this.state) {
+      this.writeUserData();
+    }
+  }
 
-         });       
-          
-       });
-   }
-    // render(){
-    //   let ScheduleItemKeys = Object.keys(this.state.ScheduleItem);
-    //   return(
-    //      <view>
-    //         {ScheduleItemKeys.length > 0 ? (
-    //         ScheduleItemKeys.map(key => (
-    //         <scheduleItem key={key} id={key}  scheduleItem={this.state.scheduleItem[key]} />
-    //         ))
-    //         ) : (
-    //         <Text>No Items</Text>
-    //         )} 
-    //          { <Text >
-    //               {allpeople}
-    //           </Text> }
-           
-    //      </view>
-    //   )
-    // }
-    
-   };
+  writeUserData = () => {
+    Firebase.database().ref('Reservation/Schedules').set(this.state);
+    console.log('DATA SAVED');
+  }
+  
+  getUserData = () => {
+    let ref = Firebase.database().ref('Reservation/Schedules');
+    ref.on('value', snapshot => {
+      const state = snapshot.val();
+      this.setState(state);
+    });
+    console.log('DATA RETRIEVED');
+  }
 
+  render() {
+      
+    const { schedules } = this.state;
+    return(
 
-class Table extends Component {
-   constructor(props) {
-      super(props) //since we are extending class Table so we have to use super in order to override Component class constructor
-      this.state = { //state is by default an object
-         // students: [
-         //    { id: 1, Firstname: 'Wasif', Lastname: 'D', Division: 'Dev Team', DeskNo: 21, Email: 'wasif@email.com', Phone: '9710122551' },
-         // //    { id: 2, Firstname: 'John', Lastname: 'F', Division: 'Dev2 Team', DeskNo: 11, Email: 'john@email.com', Phone: '6456466757' },
-         // //    { id: 3, Firstname: 'Saad', Lastname: 'H', Division: 'Admin Team', DeskNo: 51, Email: 'saad@email.com', Phone: '4645654676' },
-         // //    { id: 4, Firstname: 'Asad', Lastname: 'L', Division: 'Dev2 Team', DeskNo: 30, Email: 'Asad@email.com', Phone: '6456547656' }            
-         // ],
-         allpeople: {},
-         id:'',
-         Firstname:'',
-         Lastname:'',
-         Division:'',
-         DeskNo:'',
-         Email:'',
-         phone:'',
-         // presentpeople: ''
-         
-      };
-      this.addNewpeople = this.addNewpeople.bind(this);
-   }
-
-   componentDidMount() {
-      db.ref('Reservation/Schedules').on('value', querySnapShot => {
-         let data = querySnapShot.val() ? querySnapShot.val() : {};         
-         let allpeoples = {...data};
-         this.setState({
-           allpeople: allpeoples,
-
-         });
-         
-         
-          
-       });
-   }
-   addNewpeople() {
-      let newpeople = db.ref('Reservation/Schedules').push({
-         DeskNo: this.state.DeskNo,
-         Firstname: this.state.Firstname,
-         Lastname: this.state.Lastname,
-         Division: this.state.Division,
-         Email: this.state.Email,
-         phone: this.state.phone
-       });
-       
-       Alert('Action!', 'A new item was created');
-       this.setState({
-         presentpeople: '',
-         Firstname:'',
-         Lastname:'',
-         DeskNo:'',
-         Division:'',
-         Email:'',
-         phone:''
-
-       });
-       
-   }
-   clear() {
-      db.ref('Reservation/Schedules').remove();
-   }
-
-   renderTableData() {
-   //  return this.state.students.map((student, index) => {
-   //     const { id, Firstname, Lastname, Division, DeskNo, Email,Phone } = student //destructuring
-   //     return (
-   //        <tr key={id}>
-   //           <td>{id}</td>
-   //           <td>{Firstname}</td>
-   //           <td>{Lastname}</td>
-   //           <td>{Division}</td>
-   //           <td>{DeskNo}</td>
-   //           <td>{Email}</td>
-   //           <td>{Phone}</td>
-   //        </tr>
-   //     )
-   //  })
-
-   // Import Admin SDK
-
-   let ref = db.ref("Reservation/Schedules");
-
-// Attach an asynchronous callback to read the data at our posts reference
-   ref.on("value", function(snapshot) {
-   console.log(snapshot.val());
-
-   }, function (errorObject) {
-   console.log("The read failed: " + errorObject.code);
-   
-   });
- }
-
- renderTableHeader() {
-    let header = Object.keys(this.state.students[0])
-    return header.map((key, index) => {
-       return <th key={index}>{key.toUpperCase()}</th>
-    })
- }
-
- 
-
-   render() { //Whenever our class runs, render method will be called automatically, it may have already defined in the constructor behind the scene.
-    let peoplelist = Firebase.database().ref('Reservation/Schedules');
-    // alert(peoplelist.Firstname);
-      return (
-         <div>
-            
-            <View>
-            {/* <table id='students'>
-               <tbody>
-                  <tr>{this.renderTableHeader()}</tr>
-                  {this.renderTableData()}
-               </tbody>
-            </table>            */}
-
-               {/* <ScheduleItem /> */}
-               {/* <Text >
-                    {id}
-                  {FirstName}
-                  {LastName}
-              </Text> */}
-            
-            </View>
-            
-            <TextInput
-          placeholder="FirstName"
-          
-          value={this.state.Firstname}
-          style={styles.TextItem}
-          onChangeText={e => {
-            this.setState({
-              Firstname: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewpeople}
-        />
-         <TextInput
-          placeholder="LastName"
-          value={this.state.Lastname}
-          style={styles.TextItem}
-          onChangeText={e => {
-            this.setState({
-              Lastname: e,
-            });
-          }}
-          
-        />
-         <TextInput
-          placeholder="Division"
-          value={this.state.Division}
-          style={styles.TextItem}
-          onChangeText={e => {
-            this.setState({
-              Division: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewpeople}
-        />
-         <TextInput
-          placeholder="DeskNo"
-          value={this.state.DeskNo}
-          style={styles.TextItem}
-          onChangeText={e => {
-            this.setState({
-              DeskNo: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewpeople}
-        />
-         <TextInput
-          placeholder="Email"
-          value={this.state.Email}
-          style={styles.TextItem}
-          onChangeText={e => {
-            this.setState({
-              Email: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewpeople}
-        />
-         <TextInput
-          placeholder="Phone"
-          value={this.state.phone}
-          style={styles.TextItem}
-          onChangeText={e => {
-            this.setState({
-              phone: e,
-            });
-          }}
-          onSubmitEditing = {this.addNewpeople}
-        />
-
-     
-        <Button
-          title="Add New People"
-          onPress={this.addNewpeople}
-          color="lightgreen"
-        />
-         </div>
-      )
-   }
+      <div >
+      <div className="row">
+        <div className='col-xl-12'>
+          <h5>CWGS Development Team</h5>
+        </div>
+      </div>
+      {/* <div className='row'> */}
+      <table id='schedules' style={{width:'100%'}}>
+                    <tr>
+                      
+                      <th style={{width:'20%'}}>First Name </th>
+                      <th style={{width:'10%'}}>Last Name</th>
+                      <th style={{width:'8%'}}>Desk Number</th>
+                      <th style={{width:'17%'}}>Division</th>
+                      <th style={{width:'20%'}}>Email</th>
+                      <th style={{width:'15%'}}>Phone Number</th>
+                      <th style={{width:'20%'}}> Edit Delete</th>
+                      
+                    </tr>
+                
+                  </table>
+      
+        {/* <div className='col-xl-12'> */}
+        { 
+          schedules
+          .map(schedule => 
+            <div key={schedule.uid} >
+              {/* <div className="card-body"> */}
+                {/* < className="card-title"> */}
+                <table id='schedules' style={{width:'100%'}}>
+                  {/* <thead>
+                    <tr>
+                      
+                      <th>First Name </th>
+                      <th>Last Name</th>
+                      <th>Desk Number</th>
+                      <th>Division</th>
+                      <th>Email</th>
+                      <th>Phone Number</th>
+                    </tr>
+                  </thead> */}
+                <tbody>
+                  <tr key={schedule.uid}>
+                 
+                <td style={{width:'20%'}}> { schedule.firstname }</td>
+                <td style={{width:'10%'}}> { schedule.lastname }</td>
+                <td style={{width:'8%'}}> { schedule.deskno }</td>
+                <td style={{width:'17%'}}>  { schedule.division }</td>
+                <td style={{width:'20%'}}> { schedule.email }</td>
+                <td style={{width:'15%'}}> { schedule.phoneno }</td>
+                <td><button style={{widht:'5%'}} onClick={ () => this.updateData(schedule) } className="btn btn-link">Edit</button></td>
+                <td><button style={{width:'5%', marginRight:'2%'}} onClick={ () => this.removeData(schedule) } className="btn btn-link">Delete</button> </td>
+                
+                </tr>
+                </tbody>
+                </table>
+                {/* <p className="card-text">{ schedule.role }</p> */}
+                
+              {/* </div> */}
+            </div>
+            )
+        } 
+        {/* </div> */}
+      {/* </div> */}
+      <div className='row'>
+        <div className='col-xl-12'>
+          <h1>Add New Team Member Here</h1>
+          <form onSubmit={ this.handleSubmit }>
+            <div className="form-row">
+              <input type='hidden' ref='uid' />
+              <div className="form-group col-md-6">
+                <label>FirstName</label>
+                <input type="text" ref='firstname' className="form-control" placeholder="FirstName" />
+              </div>
+              <div className="form-group col-md-6">
+                <label>LastName</label>
+                <input type="text" ref='lastname' className="form-control" placeholder="LastName" />
+              </div>
+              <div className="form-group col-md-6">
+                <label>DeskNo</label>
+                <input type="text" ref='deskno' className="form-control" placeholder="DeskNo" />
+              </div>
+              <div className="form-group col-md-6">
+                <label>Division</label>
+                <input type="text" ref='division' className="form-control" placeholder="Division" />
+              </div>
+              <div className="form-group col-md-6">
+                <label>Email</label>
+                <input type="text" ref='email' className="form-control" placeholder="Email" />
+              </div>
+              <div className="form-group col-md-6">
+                <label>PhoneNo</label>
+                <input type="text" ref='phoneno' className="form-control" placeholder="PhoneNo" />
+              </div>
+              
+            </div>
+            <button type="submit" className="btn btn-primary">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-export default Table
+handleSubmit = (event) => {
+  event.preventDefault();
+  let firstname = this.refs.firstname.value;
+  let lastname = this.refs.lastname.value;
+  let deskno = this.refs.deskno.value;
+  let division = this.refs.division.value;
+  let email = this.refs.email.value;
+  let phoneno = this.refs.phoneno.value;
+  // let role = this.refs.role.value;
+  let uid = this.refs.uid.value;
+
+  if (uid && firstname && lastname){
+    const { schedules } = this.state;
+    const devIndex = schedules.findIndex(data => {
+      return data.uid === uid 
+    });
+    schedules[devIndex].firstname = firstname;
+    schedules[devIndex].lastname = lastname;
+    schedules[devIndex].deskno = deskno;
+    schedules[devIndex].division = division;
+    schedules[devIndex].email = email;
+    schedules[devIndex].phoneno = phoneno;
+    // schedules[devIndex].role = role;
+    this.setState({ schedules });
+  }
+  else if (firstname && lastname ) {
+    const uid = new Date().getTime().toString();
+    const { schedules } = this.state;
+    schedules.push({ uid, firstname, lastname, deskno, division, email, phoneno })
+    this.setState({ schedules });
+  }
+
+  this.refs.firstname.value = '';
+  this.refs.lastname.value = '';
+  this.refs.deskno.value = '';
+  this.refs.division.value = '';
+  this.refs.email.value = '';
+  this.refs.phoneno.value = '';
+  this.refs.uid.value = '';
+}
+
+removeData = (schedule) => {
+  const { schedules } = this.state;
+  const newState = schedules.filter(data => {
+    return data.uid !== schedule.uid;
+  });
+  this.setState({ schedules: newState });
+}
+
+updateData = (schedule) => {
+  this.refs.uid.value = schedule.uid;
+  this.refs.firstname.value = schedule.firstname;
+  this.refs.lastname.value = schedule.lastname;
+  this.refs.deskno.value = schedule.deskno;
+  this.refs.division.value = schedule.division;
+  this.refs.email.value = schedule.email;
+  this.refs.phoneno.value = schedule.phoneno;
+}
+  
+}
+
+export default Schedules;
+
