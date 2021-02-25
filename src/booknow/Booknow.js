@@ -20,7 +20,9 @@ class Booknow extends React.Component{
         super(props);
         this.state = {            
             booking:[],
+            reservations: [],
             // checkbox : 'yes'
+            deskno:'',
             status: false,
             
         }
@@ -92,7 +94,9 @@ class Booknow extends React.Component{
 
     onClick = (e) =>{
         e.preventDefault()
+        // this.setState({deskno:e.target.value});
         alert('You are Booking the Desk No:' + e.target.id);
+        
         
     }
 
@@ -101,6 +105,11 @@ class Booknow extends React.Component{
             'The seat Number is:'+ this.seatno
         )
     }
+
+    success(){
+      alert("You have successfully booked the Desk" )
+    }
+
     changeStatus = (event) => {
        this.setState((prevState) => {
          return {
@@ -139,7 +148,7 @@ render(){
               </div>
               <div className="form-group ">
                 <label>DeskNo:</label>
-                <input style={{marginLeft:'25px'}} type="text" ref='deskno'  placeholder="DeskNo" />
+                <input style={{marginLeft:'25px'}} type="text" ref='deskno' name='deskno'  placeholder="DeskNo" />
               </div>
               <div className="form-group ">
                 <label>Division:</label>
@@ -154,8 +163,25 @@ render(){
                 <label> Inhouse Hours</label>
               </div>
             </div>
-            <button type="submit" style={{marginLeft:'120px'}} className="btn btn-primary">Save</button>
+            <button type="submit" onClick={this.success}  style={{marginLeft:'120px'}} className="btn btn-primary">Save</button>
           </form>
+          { 
+          this.state.reservations
+          .map(reservation => 
+                  <tr key={reservation.uid}>
+                 
+                <td > { reservation.firstname }</td>
+                <td > { reservation.lastname }</td>
+                <td > { reservation.deskno }</td>
+                <td >  { reservation.division }</td>
+                <td > { reservation.startdate }</td>
+                <td > { reservation.enddate }</td>
+                <td > { reservation.inhousehour }</td>  
+                <td > { reservation.onlinehour }</td>
+                </tr>
+                
+                 )
+        } 
 
         </div>
         <h1 style={{marginLeft:'5%'}}> Block Selected Dates</h1>

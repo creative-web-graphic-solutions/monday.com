@@ -10,7 +10,8 @@ import { Banner} from "monday-ui-react-core";
 import DragDropChart from "./drag-drop-chart/drag-drop-chart";
 import EditChart from "./edit-chart/edit-chart";
 import Schedules from "./Schedules/schedules";
-import Analytics from "./Analytics/analytics";
+import Reservations from "./Reservations/reservation";
+import Analytics from "./Analytics/analytics1";
 import Map from "./Map/map";
 import { MenuButton, MenuItem, DropdownChevronDown, Sun } from "monday-ui-react-core";
 import EditNode from "./edit-node/edit-node";
@@ -34,7 +35,8 @@ const App = () => {
           <NavLink to="/uploadlayout" exact activeClassName="selected">Uploadlayout</NavLink>
           <NavLink to="/booknow" activeClassName="selected">Layout(Booknow)</NavLink>
           <NavLink to="/schedules" activeClassName="selected">Schedules</NavLink>
-          <NavLink to="/analytics" activeClassName="selected">Analytics</NavLink>
+          <NavLink to="/Reservations" activeClassName="selected">Reservations</NavLink>
+          <NavLink to="/analytics1" activeClassName="selected">Analytics</NavLink>
          
           <NavLink to="/map" activeClassName="selected">Map</NavLink>
           
@@ -46,7 +48,8 @@ const App = () => {
         <Route exact path="/uploadlayout" component={uploadlayout} />
         <Route path="/booknow" component={booknow} />
         <Route path="/schedules" component={Schedules} />
-        <Route path="/analytics" component={Analytics} />
+        <Route path="/Reservations" component={Reservations} />
+        <Route path="/analytics1" component={Analytics} />
         
         <Route path="/map" component={Map} />
         <Route path="/drag-drop-chart" component={DragDropChart} />
