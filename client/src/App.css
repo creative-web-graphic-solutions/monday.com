@@ -1,0 +1,28 @@
+nav {
+  background-color: green;
+  display: block;
+  height: 3.25rem;
+}
+
+nav a {
+  display: inline-block;
+  box-sizing: border-box;
+  border: 1px solid white;
+  color: #fff;
+  padding: 1rem 1rem;
+  text-decoration: none;
+}
+
+nav a.selected {
+  background-color: #fff;
+  color: #000;
+}
+
+nav a:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.wrapper {
+  height: 100%;
+}
