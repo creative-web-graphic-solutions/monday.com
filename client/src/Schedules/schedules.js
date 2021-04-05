@@ -3,43 +3,51 @@ import "./styles.css";
 import Firebase from 'firebase';
 import { db } from '../config';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import gql from 'graphql-tag';
 import UserInfo from './userquery';
-// // import { ApolloProvider} from 'react-apollo';
-// import { ApolloProvider } from '@apollo/react-hooks';
-// import {createNetworkInterface} from 'apollo-client';
-// import {ApolloClient } from 'apollo-boost';
-// import { InMemoryCache } from 'apollo-cache-inmemory';
-// import { HttpLink } from 'apollo-link-http';
+import mondaySdk from 'monday-sdk-js';
+import { useQuery } from '@apollo/react-hooks';
+const monday = mondaySdk();
 
 
-//const createApolloClient = (authToken) => {
-//  return new ApolloClient({
-//    link:new HttpLink({
-//      uri:'http://localhost:8080/graphql',
-//      headers:{
-//        Authorization:'Bearer ${authToken}'
-//      }
-//    }),
-//    cache:new InMemoryCache(),
-//  });
-//};
-
-// const client = new ApolloClient({
-//   // networkInterface,cd 
-//   cache : new InMemoryCache(),
-//   uri:'http://localhost:8080/graphql'
-// });
-
-// const WithProvider = () => (
-//   <ApolloProvider client={client}>
-//     <App />
-//   </ApolloProvider>
-// )
+const Row = ({ id }) => (
+  <tr>
+    <td>
+    <button style={{widht:'5%'}} onClick={ () => this.updateData(id) } className="btn btn-link">Edit</button>
+    </td>
+    <td>
+    <button style={{width:'5%'}} onClick={ () => this.removeData(id) } className="btn btn-link">Delete</button> 
+    </td>
+  </tr>
+);
 
 
-// const networkInterface = createNetworkInterface({
-//   uri:'http://localhost:8080/graphql'
-// })
+const GET_USERS = gql`
+    {
+      users{
+        id
+        name
+        photo_original
+        email
+        phone
+      }
+
+    }
+`
+
+const User = ({User: {id,name,photo_original, email,phone}}) => (
+  <div className='Card'>
+    <ul>
+
+      <li>{name}</li>
+      <li>{photo_original}</li>
+      <li>{email}</li>
+      <li>{phone}</li>      
+    </ul>
+  
+  </div>
+)
+
 
 
 class Schedules extends React.Component {
@@ -49,8 +57,11 @@ class Schedules extends React.Component {
     // Firebase.initializeApp(db);
 
     this.state = {
-      schedules: []
-      
+      schedules: [],
+      monusername:'',
+      monemail:'',
+      monphoneno:'',
+      monschedules:[],
     }
   }
 
@@ -82,51 +93,126 @@ class Schedules extends React.Component {
 
   monuserdata = () =>{
     console.log("User Data retrieved");
-    // const client = new ApolloClient();
-    // <ApolloProvider client={client}>
-    //   <UserInfo/>
-    // </ApolloProvider>
-    // graphapp.listen(8080, () => console.log('Running server on port localhost:8080/graphql'));
+    let monusername = [];
+    let monemail = [];
+    let monphone = [];
 
-  }
+    // const {loading, error, data} = useQuery(GET_USERS);
+    const result =  monday.api('{users{id name phone photo_original email}}')
+    .then((users) => {
+      console.log( JSON.stringify(users));
+      // monusername.push('Balamurugan');
+      // monphone.push(users.data.users[2]);
+      // monemail.push(users.data.users[3]);
+      
+      this.setState({monusername: users.data.users[0].name});
+      this.setState({monemail:users.data.users[0].email});
+      this.setState({monphone:users.data.users[0].phone});
+      
+    }).catch((err) => {
+      console.log(err);
+    });
+    
+    
+    // {this.state.users.map(user => (
+    //   <Row user = {user} />
+    // ))}   
+ }
+
+ monupdatedata = () =>{
+   console.log('monupdatedata');
+  //  this.setState({firstname:"balamuurgan"});
+  this.refs.firstname.value = this.state.monusername;
+  this.refs.email.value = this.state.monemail;
+  this.refs.phoneno.value = this.state.monphone;
+
+  this.setState({monusername:''});
+  this.setState({monemail:''});
+  this.setState({monphone:''});
+
+}
+
 
   render() {
    
-    // const client = new ApolloClient({
-    //   uri: 'https://7sgx4.sse.codesandbox.io'
-    // })
-    
+   
     const { schedules } = this.state;
+    const {monschedules} = this.state;
     return(
-
-      <div >
+      
+      <div>
       <div className="row">
         <div className='col-xl-12'>
           <h5>CWGS Development Team</h5>
-          <button type="button" className="btn btn-primary" onClick={this.monuserdata} style={{backgroundColor:"green", float:"right", }}>Add Monday User</button>
-
+           <br/>         
         </div>
       </div>
-{/*       
-    <ApolloProvider client={client}>
-      <UserInfo/>
-    </ApolloProvider> */}
-      {/* <div className='row'> */}
+
+      
+        < div className="row" >
+        <h4 style={{marginLeft:"2%"}}>monday User Detail</h4>
+      <button type="button" className="btn btn-primary" onClick={this.monuserdata} style={{backgroundColor:"green", marginLeft:"30%" }}>Add monday User</button>
+      
+      
       <table id='schedules' style={{width:'100%'}}>
+                  <thead>
+                    <tr>
+                      
+                      <th style={{width:'30%'}}> Name </th>
+                      
+                      <th style={{width:'8%'}}>Desk Number</th>
+                      <th style={{width:'12%'}}>Division</th>
+                      <th style={{width:'25%'}}>Email</th>
+                      <th style={{width:'15%'}}>Phone Number</th>
+                      <th style={{width:'5%'}}> Edit</th>
+                      {/* <th style={{width:'5%'}}> Delete</th> */}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {/* { 
+          monschedules
+          .map(monschedule =>  */}
+            {/* <div key={1} >     */}
+                  
+                  <tr key={monschedules.uid} >
+                 
+                <td style={{width:'30%'}}> { this.state.monusername }</td>
+                
+                <td style={{width:'8%'}}> {  }</td>
+                <td style={{width:'12%'}}>  { }</td>
+                <td style={{width:'25%'}}> { this.state.monemail }</td>
+                <td style={{width:'15%'}}> { this.state.monphone }</td>
+                <td><button style={{width:'5%',float:'left'}} onClick={this.monupdatedata} className="btn btn-link">Edit</button></td>
+                {/* <td><button style={{width:'5%'}} onClick={ this.monremovedata } className="btn btn-link">Delete</button> </td> */}
+                
+                </tr>
+                
+                {/* </div> */}
+          {/* )} */}
+                </tbody>
+
+                  </table>
+        </div>
+        <br/> <br/>
+            <h4 style={{marginLeft:'2%'}}>All Users</h4>
+      <table id='schedules' style={{width:'100%'}}>
+                  <thead>
                     <tr>
                       
                       <th style={{width:'20%'}}>First Name </th>
                       <th style={{width:'10%'}}>Last Name</th>
                       <th style={{width:'8%'}}>Desk Number</th>
-                      <th style={{width:'17%'}}>Division</th>
-                      <th style={{width:'20%'}}>Email</th>
+                      <th style={{width:'12%'}}>Division</th>
+                      <th style={{width:'25%'}}>Email</th>
                       <th style={{width:'15%'}}>Phone Number</th>
-                      <th style={{width:'20%'}}> Edit Delete</th>
-                      
+                      <th style={{width:'5%'}}> Edit</th>
+                      <th style={{width:'5%'}}> Delete</th>
                     </tr>
-                
+                    </thead>
+                   
+
                   </table>
-      
+        
         {/* <div className='col-xl-12'> */}
         { 
           schedules
@@ -152,13 +238,14 @@ class Schedules extends React.Component {
                 <td style={{width:'20%'}}> { schedule.firstname }</td>
                 <td style={{width:'10%'}}> { schedule.lastname }</td>
                 <td style={{width:'8%'}}> { schedule.deskno }</td>
-                <td style={{width:'17%'}}>  { schedule.division }</td>
-                <td style={{width:'20%'}}> { schedule.email }</td>
+                <td style={{width:'12%'}}>  { schedule.division }</td>
+                <td style={{width:'25%'}}> { schedule.email }</td>
                 <td style={{width:'15%'}}> { schedule.phoneno }</td>
                 <td><button style={{widht:'5%'}} onClick={ () => this.updateData(schedule) } className="btn btn-link">Edit</button></td>
-                <td><button style={{width:'5%', marginRight:'2%'}} onClick={ () => this.removeData(schedule) } className="btn btn-link">Delete</button> </td>
+                <td><button style={{width:'5%', float:'left'}} onClick={ () => this.removeData(schedule) } className="btn btn-link">Delete</button> </td>
                 
                 </tr>
+                
                 </tbody>
                 </table>
                 {/* <p className="card-text">{ schedule.role }</p> */}
@@ -169,6 +256,7 @@ class Schedules extends React.Component {
         } 
         {/* </div> */}
       {/* </div> */}
+     
       <div className='row'>
         <div className='col-xl-12'>
           <h1>Add New Team Member Here</h1>
@@ -209,6 +297,7 @@ class Schedules extends React.Component {
   )
 }
 
+
 handleSubmit = (event) => {
   event.preventDefault();
   let firstname = this.refs.firstname.value;
@@ -240,7 +329,10 @@ handleSubmit = (event) => {
     schedules.push({ uid, firstname, lastname, deskno, division, email, phoneno })
     this.setState({ schedules });
   }
+  else if (firstname && lastname ) {
+    const uid = new Date().getTime().toString();
 
+  }
   this.refs.firstname.value = '';
   this.refs.lastname.value = '';
   this.refs.deskno.value = '';

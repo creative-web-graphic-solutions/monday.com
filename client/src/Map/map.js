@@ -312,7 +312,7 @@ render(){
         <Tabs >
     
  <div label="People" >
- <img style={{float:'right', marginRight:'30%'}} src={offlayout} alt="Layout of Office" />             
+ <img style={{float:'right', marginRight:'10%'}} src={offlayout} alt="Layout of Office" />             
  <div style={{width:'30%', marginLeft:'30px'}}>
 
    <h3> Select Employee Name</h3> <br/>

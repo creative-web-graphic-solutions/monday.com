@@ -34,7 +34,7 @@ const App = () => {
         {/* <NavLink to="/export-chart" activeClassName="selected">Export Chart</NavLink> */}
         {/* <NavLink to="/edit-node" activeClassName="selected">Edit Node</NavLink> */}
           <NavLink to="/uploadlayout" exact activeClassName="selected">Uploadlayout</NavLink>
-          <NavLink to="/user" exact activeClassName="selected">Monday User</NavLink>
+          {/* <NavLink to="/user" exact activeClassName="selected">Monday User</NavLink> */}
           <NavLink to="/booknow" activeClassName="selected">Layout(Booknow)</NavLink>
           <NavLink to="/schedules" activeClassName="selected">Schedules</NavLink>
           <NavLink to="/Reservations" activeClassName="selected">Reservations</NavLink>
@@ -48,7 +48,7 @@ const App = () => {
         {/* <Route path="/export-chart" component={Exportchart} />    */}
         {/* <Route path="/edit-node" component={EditNode} />         */}
         <Route exact path="/uploadlayout" component={uploadlayout} />
-        <Route exact path="/user" component={user} />
+        {/* <Route exact path="/user" component={user} /> */}
         <Route path="/booknow" component={booknow} />
         <Route path="/schedules" component={Schedules} />
         <Route path="/Reservations" component={Reservations} />

@@ -124,7 +124,7 @@ render(){
     
     return(
         <div >
-           <div style={{float:'right', marginRight:'20%', marginTop:'5%'}}>       
+           <div style={{float:'right', marginRight:'10%', marginTop:'5%'}}>       
         <h3>My Booking Details</h3> 
         
       <form onSubmit={ this.handleSubmit } style={{background:'white', padding:'40px'}} >

@@ -1,6 +1,6 @@
 {
   "name": "TeamSeatingPlan",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "./dist/ChartContainer.js",
   "files": [
     "dist",
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dabeng/react-orgchart.git"
+    "url": "https://github.com/creative-web-graphic-solutions/monday.com"
   },
   "keywords": [
     "react",
@@ -20,10 +20,10 @@
     "tree-like",
     "tree-view"
   ],
-  "author": "dabeng <dabeng413@gmail.com>",
-  "license": "MIT",
+  "author": "dbalamurugan@creativewebgraphic.com",
+  
   "bugs": {
-    "url": "https://github.com/dabeng/react-orgchart/issues"
+    "url": ""
   },
   "homepage": "http://monday.atlassiancodegeist.com",
   "babel": {
@@ -54,6 +54,7 @@
     "jspdf": "^1.5.3",
     "material-ui": "^0.20.2",
     "mdbreact": "^5.0.1",
+    "monday-sdk-js": "^0.1.2",
     "monday-ui-react-core": "0.0.67",
     "nodemon": "^2.0.7",
     "react-apollo": "^3.1.5",

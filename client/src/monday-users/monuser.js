@@ -33,7 +33,7 @@ function App() {
 
     return (
         <main className='App'>
-            <h1>Github | Users</h1>
+            <h1>Employee | Users</h1>
             {data.users.map((user) => (
                 <User key={user.id} user={user} />
             ))}
